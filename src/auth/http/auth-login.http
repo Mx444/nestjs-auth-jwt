@@ -1,0 +1,56 @@
+@baseUrl = http://localhost:1337
+@contentType = application/json
+
+### LOGIN - Credenziali valide
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "john.doe@example.com",
+  "password": "Password123!"
+}
+
+### LOGIN - Credenziali errate (password sbagliata)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "john.doe@example.com",
+  "password": "WrongPassword123!"
+}
+
+### LOGIN - Utente non esistente
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "nonexistent@example.com",
+  "password": "Password123!"
+}
+
+### LOGIN - Email mancante (validazione)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "password": "Password123!"
+}
+
+### LOGIN - Password mancante (validazione)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "john.doe@example.com"
+}
+
+### LOGIN - Secondo utente
+# @name login2
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "alice.smith@example.com",
+  "password": "SecurePass456!"
+}

@@ -1,0 +1,30 @@
+@baseUrl = http://localhost:1337
+
+### GET PROFILE - Con token valido (inserisci il token dal login)
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE3NjEwNTg0ODcsImV4cCI6MTc2MTA2MjA4N30.CN-OcYTkc6fG1NRL85zFxfKpAX0miaplgU6CG0vkz2c
+
+### GET PROFILE - Usando variabile dal login (se eseguito dopo auth-login.http)
+@authToken = {{login.response.body.accessToken}}
+
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer {{authToken}}
+
+### GET PROFILE - Senza token (dovrebbe fallire con 401)
+GET {{baseUrl}}/auth/profile
+
+### GET PROFILE - Token malformato (dovrebbe fallire con 401)
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer invalid.token.here
+
+### GET PROFILE - Token scaduto (sostituisci con un token scaduto)
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.expired.token
+
+### GET PROFILE - Bearer malformato (senza "Bearer")
+GET {{baseUrl}}/auth/profile
+Authorization: YOUR_JWT_TOKEN_HERE
+
+### GET PROFILE - Header Authorization vuoto
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer 

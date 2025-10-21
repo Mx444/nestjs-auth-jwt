@@ -1,0 +1,19 @@
+@baseUrl = http://localhost:1337
+
+### REGISTER - Crea nuovo utente
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "Password123!"
+}
+
+### REGISTER - Test con utente già esistente
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "Password123!"
+}
