@@ -1,3 +1,5 @@
+/** @format */
+
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateUserMigration1761038309374 implements MigrationInterface {

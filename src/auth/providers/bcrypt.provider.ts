@@ -1,3 +1,5 @@
+/** @format */
+
 import { Injectable } from '@nestjs/common';
 import { hash, compare } from 'bcrypt';
 import { CompareBcryptDTO, HashBcryptDTO } from '../dtos/bcrypt.dto';

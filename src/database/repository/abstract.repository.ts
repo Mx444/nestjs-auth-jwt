@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/** @format */
+
 import { BaseInterfaceRepository } from 'src/database/interfaces/base.interface';
 import {
   DeepPartial,
@@ -38,6 +39,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
 
   public async findOneById(id: any): Promise<T | null> {
     const options: FindOptionsWhere<T> = {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       id: id,
     };
     return await this.entity.findOneBy(options);

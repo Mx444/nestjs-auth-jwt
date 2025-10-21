@@ -1,10 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  DeepPartial,
-  FindManyOptions,
-  FindOneOptions,
-  FindOptionsWhere,
-} from 'typeorm';
+/** @format */
+
+import { DeepPartial, FindManyOptions, FindOneOptions } from 'typeorm';
 
 export interface BaseInterfaceRepository<T> {
   create(data: DeepPartial<T>): T;

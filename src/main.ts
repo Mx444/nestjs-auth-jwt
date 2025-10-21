@@ -1,3 +1,5 @@
+/** @format */
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
