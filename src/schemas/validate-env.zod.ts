@@ -21,6 +21,9 @@ export const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
+
+  // JWT
+  JWT_SECRET: z.string().min(1),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

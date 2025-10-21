@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import { User } from 'src/auth/entities/user.entity';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -30,13 +31,18 @@ import { ConfigService } from '@nestjs/config';
             ? configService.get('DB_NAME_DEV')
             : configService.get('DB_NAME_PROD'),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: true,
-        logging: true,
+        migrations: [__dirname + '/migrations/*{.ts,.js}'],
+        cli: {
+          migrationsDir: 'src/database/migrations',
+        },
+        synchronize: false,
+        logging: configService.get('NODE_ENV') === 'development',
       }),
       inject: [ConfigService],
     }),
+
+    TypeOrmModule.forFeature([User]),
   ],
-  controllers: [],
-  providers: [],
+  exports: [TypeOrmModule.forFeature([User])],
 })
 export class DatabaseModule {}
