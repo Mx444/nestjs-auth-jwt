@@ -1,10 +1,11 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
-export class BcryptDTO {
+export class HashBcryptDTO {
   @IsString()
   password: string;
+}
 
+export class CompareBcryptDTO extends HashBcryptDTO {
   @IsString()
-  @IsOptional()
   hashedPassword: string;
 }

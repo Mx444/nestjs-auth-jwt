@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { BcryptProvider } from 'src/auth/providers/bcrypt.provider';
+import { AuthService } from 'src/auth/providers/auth.service';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { BcryptProvider } from 'src/auth/providers/bcrypt.provider';
     }),
   ],
   controllers: [],
-  providers: [BcryptProvider],
+  providers: [BcryptProvider, AuthService],
 })
 export class AuthModule {}
