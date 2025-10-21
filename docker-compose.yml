@@ -26,7 +26,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: src/Dockerfile
     container_name: nestjs-auth-app
     restart: unless-stopped
     environment:
