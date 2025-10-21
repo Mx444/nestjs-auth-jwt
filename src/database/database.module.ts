@@ -5,47 +5,54 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { User } from 'src/auth/entities/user.entity';
+import { join } from 'path';
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host:
-          configService.get('NODE_ENV') === 'development'
+      useFactory: (configService: ConfigService) => {
+        const isDevelopment = configService.get('NODE_ENV') === 'development';
+
+        return {
+          type: 'postgres',
+          host: isDevelopment
             ? configService.get('DB_HOST_DEV')
             : configService.get('DB_HOST_PROD'),
-        port: Number(
-          configService.get('NODE_ENV') === 'development'
-            ? configService.get('DB_PORT_DEV')
-            : configService.get('DB_PORT_PROD'),
-        ),
-        username:
-          configService.get('NODE_ENV') === 'development'
+          port: Number(
+            isDevelopment
+              ? configService.get('DB_PORT_DEV')
+              : configService.get('DB_PORT_PROD'),
+          ),
+          username: isDevelopment
             ? configService.get('DB_USERNAME_DEV')
             : configService.get('DB_USERNAME_PROD'),
-        password:
-          configService.get('NODE_ENV') === 'development'
+          password: isDevelopment
             ? configService.get('DB_PASSWORD_DEV')
             : configService.get('DB_PASSWORD_PROD'),
-        database:
-          configService.get('NODE_ENV') === 'development'
+          database: isDevelopment
             ? configService.get('DB_NAME_DEV')
             : configService.get('DB_NAME_PROD'),
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        migrations: [__dirname + '/migrations/*{.ts,.js}'],
-        cli: {
-          migrationsDir: 'src/database/migrations',
-        },
-        synchronize: false,
-        logging: configService.get('NODE_ENV') === 'development',
-      }),
+          entities: [
+            configService.get('NODE_ENV') === 'production'
+              ? join(__dirname, '../**/*.entity.js')
+              : join(__dirname, '../**/*.entity.ts'),
+          ],
+          migrations: [
+            configService.get('NODE_ENV') === 'production'
+              ? join(__dirname, './migrations/*.js')
+              : join(__dirname, './migrations/*.ts'),
+          ],
+          synchronize: false,
+          logging: isDevelopment,
+          autoLoadEntities: true,
+        };
+      },
       inject: [ConfigService],
     }),
 
     TypeOrmModule.forFeature([User]),
   ],
   exports: [TypeOrmModule.forFeature([User])],
-  providers: [],
 })
 export class DatabaseModule {}

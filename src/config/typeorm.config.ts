@@ -1,6 +1,7 @@
 /** @format */
 
 import { DataSource } from 'typeorm';
+import { join } from 'path';
 import 'dotenv/config';
 
 export default new DataSource({
@@ -10,8 +11,16 @@ export default new DataSource({
   username: process.env.DB_USERNAME_DEV || 'postgres',
   password: process.env.DB_PASSWORD_DEV || 'postgres',
   database: process.env.DB_NAME_DEV || 'nestjs_auth',
-  entities: ['src/**/*.entity.ts'],
-  migrations: ['src/database/migrations/*.ts'],
+  entities: [
+    process.env.NODE_ENV === 'production'
+      ? join(__dirname, '../**/*.entity.js')
+      : join(__dirname, '../**/*.entity.ts'),
+  ],
+  migrations: [
+    process.env.NODE_ENV === 'production'
+      ? join(__dirname, '../database/migrations/*.js')
+      : join(__dirname, '../database/migrations/*.ts'),
+  ],
   synchronize: false,
-  logging: true,
+  logging: process.env.NODE_ENV !== 'production',
 });

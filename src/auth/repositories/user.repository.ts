@@ -1,11 +1,11 @@
 /** @format */
 
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, IsNull } from 'typeorm';
 import { User } from 'src/auth/entities/user.entity';
 import { BaseAbstractRepostitory } from 'src/database/repository/abstract.repository';
-import { Repository } from 'typeorm/repository/Repository';
 import { UserRepositoryInterface } from '../interfaces/user.interface';
-import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserRepository
@@ -16,6 +16,27 @@ export class UserRepository
     @InjectRepository(User)
     private readonly userEntity: Repository<User>,
   ) {
-    super(userEntity);
+    super(userEntity, '👤 AUTH:User-Repository');
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    try {
+      return await this.findOne({
+        where: {
+          email,
+          deletedAt: IsNull(),
+        },
+      });
+    } catch (error) {
+      this.handleError(`finding user by email ${email}`, error);
+      throw error;
+    }
+  }
+
+  async existsByEmail(email: string): Promise<boolean> {
+    return this.exists({
+      email,
+      deletedAt: IsNull(),
+    });
   }
 }
