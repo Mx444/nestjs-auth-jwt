@@ -3,6 +3,7 @@ import { DatabaseModule } from 'src/database/database.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { BcryptProvider } from 'src/auth/providers/bcrypt.provider';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { JwtModule } from '@nestjs/jwt';
     }),
   ],
   controllers: [],
-  providers: [],
+  providers: [BcryptProvider],
 })
-export class AppModule {}
+export class AuthModule {}
