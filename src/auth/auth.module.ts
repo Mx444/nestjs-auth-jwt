@@ -9,6 +9,7 @@ import { BcryptProvider } from 'src/auth/providers/bcrypt.provider';
 import { AuthService } from './providers/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { UserRepository } from './repositories/user.repository';
 
 @Module({
   imports: [
@@ -30,7 +31,17 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, BcryptProvider, JwtStrategy],
+  providers: [
+    // Providers
+    AuthService,
+    BcryptProvider,
+
+    // Strategies
+    JwtStrategy,
+
+    // Repositories
+    UserRepository,
+  ],
   exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}

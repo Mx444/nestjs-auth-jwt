@@ -1,27 +1,15 @@
 /** @format */
 
-import { PrimaryColumn, Entity, Column } from 'typeorm';
+import { Entity, Column } from 'typeorm';
+import { BaseEntity } from '../../database/entities/base.entity';
 
 @Entity({ name: 'users' })
-export class User {
-  @PrimaryColumn({ type: 'int', generated: 'increment' })
-  id: number;
-
+export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
   @Column({ type: 'varchar', length: 255 })
   password: string;
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
-
-  @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
-  })
-  updatedAt: Date;
 
   @Column({ type: 'timestamp', nullable: true })
   deletedAt: Date | null;

@@ -5,7 +5,6 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { User } from 'src/auth/entities/user.entity';
-import { UserRepository } from '../auth/repositories/user.repository';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -46,7 +45,7 @@ import { UserRepository } from '../auth/repositories/user.repository';
 
     TypeOrmModule.forFeature([User]),
   ],
-  exports: [TypeOrmModule.forFeature([User]), UserRepository],
-  providers: [UserRepository],
+  exports: [TypeOrmModule.forFeature([User])],
+  providers: [],
 })
 export class DatabaseModule {}
