@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USERNAME_DEV}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_DEV}
+      POSTGRES_DB: ${DB_NAME_DEV}
+    ports:
+      - '${DB_PORT_DEV}:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - nestjs-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USERNAME_DEV}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # NestJS Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nestjs-auth-app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      DB_HOST_DEV: postgres
+      DB_PORT_DEV: 5432
+      DB_USERNAME_DEV: ${DB_USERNAME_DEV}
+      DB_PASSWORD_DEV: ${DB_PASSWORD_DEV}
+      DB_NAME_DEV: ${DB_NAME_DEV}
+      NESTJS_PORT: ${NESTJS_PORT}
+    ports:
+      - '${NESTJS_PORT}:${NESTJS_PORT}'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nestjs-network
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  # TypeORM Migrations Runner
+  migrations:
+    build:
+      context: .
+      dockerfile: Dockerfile.migrations
+    container_name: nestjs-auth-migrations
+    environment:
+      DB_HOST_DEV: postgres
+      DB_PORT_DEV: 5432
+      DB_USERNAME_DEV: ${DB_USERNAME_DEV}
+      DB_PASSWORD_DEV: ${DB_PASSWORD_DEV}
+      DB_NAME_DEV: ${DB_NAME_DEV}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nestjs-network
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  nestjs-network:
+    driver: bridge
