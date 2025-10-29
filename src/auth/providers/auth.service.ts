@@ -10,6 +10,7 @@ import { LoginResponse } from '../responses/login.response';
 import { RegisterResponse } from '../responses/register.response';
 import { BcryptProvider } from './bcrypt.provider';
 import { JwtProvider } from './jwt.provider';
+import { RefreshTokenRepository } from '../repositories/refresh-token.repository';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,7 @@ export class AuthService {
     private readonly bcryptProvider: BcryptProvider,
     private readonly userRepository: UserRepository,
     private readonly jwtProvider: JwtProvider,
+    private readonly refreshTokenRepository: RefreshTokenRepository,
   ) {}
 
   public async register(registerDTO: RegisterDTO): Promise<RegisterResponse> {
@@ -58,7 +60,8 @@ export class AuthService {
 
   public async login(loginDTO: LoginDTO): Promise<LoginResponse> {
     const user = await this.validateUser(loginDTO);
-    return this.createLoginResponse(user);
+    const tokens = await this.generateAndPersistTokens(user);
+    return this.createLoginResponse(tokens.accessToken, tokens.refreshToken);
   }
 
   private async validateUser(loginDTO: LoginDTO) {
@@ -72,7 +75,7 @@ export class AuthService {
     }
 
     await this.verifyPassword(loginDTO.password, user.password);
-    return user;
+    return { id: user.id, email: user.email };
   }
 
   private async verifyPassword(plainPassword: string, hashedPassword: string): Promise<void> {
@@ -87,9 +90,33 @@ export class AuthService {
     }
   }
 
-  private createLoginResponse(payload: JwtPayload): LoginResponse {
+  private async generateAndPersistTokens(payload: JwtPayload): Promise<{
+    accessToken: string;
+    refreshToken: string;
+  }> {
     const { id, email } = payload;
     const accessToken = this.jwtProvider.generateAccessToken({ id, email });
-    return { message: 'Login successful', statusCode: 200, accessToken };
+
+    const sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const refreshToken = this.jwtProvider.generateRefreshToken({ id, type: 'refresh' });
+    const refreshTokenHash = await this.bcryptProvider.hashPassword({ password: refreshToken });
+
+    await this.refreshTokenRepository.save({
+      userId: id,
+      tokenHash: refreshTokenHash,
+      isRevoked: false,
+      expiresAt: sevenDaysFromNow,
+    });
+
+    return { accessToken, refreshToken };
+  }
+
+  private createLoginResponse(accessToken: string, refreshToken: string): LoginResponse {
+    return {
+      message: 'Login successful',
+      statusCode: 200,
+      accessToken,
+      refreshToken,
+    };
   }
 }

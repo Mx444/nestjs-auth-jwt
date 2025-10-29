@@ -11,6 +11,7 @@ import { AuthService } from './providers/auth.service';
 import { JwtProvider } from './providers/jwt.provider';
 import { UserRepository } from './repositories/user.repository';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { RefreshTokenRepository } from './repositories/refresh-token.repository';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 
     // Repositories
     UserRepository,
+    RefreshTokenRepository,
   ],
   exports: [JwtStrategy, PassportModule],
 })

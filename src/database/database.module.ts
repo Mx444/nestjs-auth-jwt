@@ -1,11 +1,11 @@
 /** @format */
 
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigService } from '@nestjs/config';
-import { User } from 'src/auth/entities/user.entity';
 import { join } from 'path';
+import { RefreshToken } from 'src/auth/entities/token.entity';
+import { User } from 'src/auth/entities/user.entity';
 
 @Module({
   imports: [
@@ -49,8 +49,8 @@ import { join } from 'path';
       inject: [ConfigService],
     }),
 
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, RefreshToken]),
   ],
-  exports: [TypeOrmModule.forFeature([User])],
+  exports: [TypeOrmModule.forFeature([User, RefreshToken])],
 })
 export class DatabaseModule {}

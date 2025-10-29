@@ -1,7 +1,8 @@
 /** @format */
 
-import { Column, DeleteDateColumn, Entity } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../database/entities/base.entity';
+import { RefreshToken } from './token.entity';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -13,4 +14,7 @@ export class User extends BaseEntity {
 
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date | null;
+
+  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
+  refreshTokens: RefreshToken[];
 }
