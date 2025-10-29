@@ -4,7 +4,6 @@ import { BadRequestException, Injectable, Logger, UnauthorizedException } from '
 import { LoginDTO, RegisterDTO } from '../dtos/base-auth.dto';
 
 import { IsNull } from 'typeorm/find-options/operator/IsNull';
-import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { UserRepository } from '../repositories/user.repository';
 import { LoginResponse } from '../responses/login.response';
 import { RegisterResponse } from '../responses/register.response';
@@ -60,8 +59,9 @@ export class AuthService {
 
   public async login(loginDTO: LoginDTO): Promise<LoginResponse> {
     const user = await this.validateUser(loginDTO);
-    const tokens = await this.generateAndPersistTokens(user);
-    return this.createLoginResponse(tokens.accessToken, tokens.refreshToken);
+    const accessToken = this.jwtProvider.generateAccessToken({ id: user.id, email: user.email });
+    const refreshToken = await this.jwtProvider.generateAndPersistRefreshToken({ id: user.id });
+    return this.createLoginResponse(accessToken, refreshToken);
   }
 
   private async validateUser(loginDTO: LoginDTO) {
@@ -88,27 +88,6 @@ export class AuthService {
       this.logger.warn(`🚨 Verify Password : Login attempt failed - invalid password`);
       throw new UnauthorizedException('Invalid credentials');
     }
-  }
-
-  private async generateAndPersistTokens(payload: JwtPayload): Promise<{
-    accessToken: string;
-    refreshToken: string;
-  }> {
-    const { id, email } = payload;
-    const accessToken = this.jwtProvider.generateAccessToken({ id, email });
-
-    const sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    const refreshToken = this.jwtProvider.generateRefreshToken({ id, type: 'refresh' });
-    const refreshTokenHash = await this.bcryptProvider.hashPassword({ password: refreshToken });
-
-    await this.refreshTokenRepository.save({
-      userId: id,
-      tokenHash: refreshTokenHash,
-      isRevoked: false,
-      expiresAt: sevenDaysFromNow,
-    });
-
-    return { accessToken, refreshToken };
   }
 
   private createLoginResponse(accessToken: string, refreshToken: string): LoginResponse {

@@ -6,5 +6,5 @@ export interface JwtPayload {
 }
 
 export interface JwtRefreshPayload extends Omit<JwtPayload, 'email'> {
-  type: string;
+  type?: string;
 }
