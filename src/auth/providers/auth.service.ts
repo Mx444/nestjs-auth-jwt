@@ -28,7 +28,7 @@ export class AuthService {
   }
 
   private async validateUserUniqueness(email: string): Promise<void> {
-    const existingUser = await this.userRepository.findOne({ where: { email } });
+    const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
       this.logger.warn(`🚨 Validate User Uniqueness : Registration attempt blocked`);
       throw new BadRequestException('Unable to process your registration request');
