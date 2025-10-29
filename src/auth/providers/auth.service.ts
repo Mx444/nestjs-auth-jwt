@@ -37,8 +37,8 @@ export class AuthService {
   }
 
   private async persistUser(registerDTO: RegisterDTO): Promise<void> {
-    const hashedPassword = await this.bcryptProvider.hashPassword({
-      password: registerDTO.password,
+    const hashedPassword = await this.bcryptProvider.hash({
+      plainText: registerDTO.password,
     });
 
     const user = this.userRepository.create({
@@ -79,9 +79,9 @@ export class AuthService {
   }
 
   private async verifyPassword(plainPassword: string, hashedPassword: string): Promise<void> {
-    const isPasswordValid = await this.bcryptProvider.comparePasswords({
-      password: plainPassword,
-      hashedPassword,
+    const isPasswordValid = await this.bcryptProvider.compare({
+      plainText: plainPassword,
+      hashedPlainText: hashedPassword,
     });
 
     if (!isPasswordValid) {

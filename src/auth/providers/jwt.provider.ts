@@ -32,7 +32,7 @@ export class JwtProvider {
         expiresIn: refreshTokenExpiresInSeconds,
       },
     );
-    const refreshHash = await this.bcryptProvider.hashPassword({ password: refreshToken });
+    const refreshHash = await this.bcryptProvider.hash({ plainText: refreshToken });
 
     await this.refreshTokenRepository.save({
       userId: payload.id,
