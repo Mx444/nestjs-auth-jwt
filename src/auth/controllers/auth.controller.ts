@@ -1,17 +1,10 @@
 /** @format */
 
-import {
-  Body,
-  Controller,
-  Post,
-  Get,
-  UseGuards,
-  Request,
-} from '@nestjs/common';
+import { Body, Controller, Post, Get, UseGuards, Request } from '@nestjs/common';
 import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { AuthService } from '../providers/auth.service';
 import { LoginDTO, RegisterDTO } from '../dtos/base-auth.dto';
-import { JwtAuthGuard } from '../../common/guards/jwt.guard';
+import { JwtAuthGuard } from '../guards/jwt.guard';
 
 @Controller('auth')
 export class AuthController {

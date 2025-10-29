@@ -22,9 +22,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
 
   protected constructor(entity: Repository<T>, context?: string) {
     this.entity = entity;
-    this.logger = new Logger(
-      context || `📊 DATABASE:${entity.metadata.name}-Repository`,
-    );
+    this.logger = new Logger(context || `📊 DATABASE:${entity.metadata.name}-Repository`);
   }
 
   public async save(data: DeepPartial<T>): Promise<T> {
@@ -73,9 +71,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
     }
   }
 
-  public async findByCondition(
-    filterCondition: FindOneOptions<T>,
-  ): Promise<T | null> {
+  public async findByCondition(filterCondition: FindOneOptions<T>): Promise<T | null> {
     try {
       return await this.entity.findOne(filterCondition);
     } catch (error) {
@@ -141,10 +137,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
     }
   }
 
-  public async upsert(
-    data: DeepPartial<T>,
-    uniqueWhere?: FindOptionsWhere<T>,
-  ): Promise<T> {
+  public async upsert(data: DeepPartial<T>, uniqueWhere?: FindOptionsWhere<T>): Promise<T> {
     try {
       if (uniqueWhere) {
         const existing = await this.entity.findOneBy(uniqueWhere);
