@@ -54,9 +54,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     }
   }
 
-  private sanitizeUser(user: User): Omit<User, 'password'> {
+  private sanitizeUser(user: User): Omit<User, 'password' | 'deletedAt'> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: __, ...result } = user;
+    const { password: __, deletedAt: ___, ...result } = user;
     this.logger.log(`User validated successfully`);
     return result;
   }
