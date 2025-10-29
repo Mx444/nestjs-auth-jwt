@@ -24,7 +24,7 @@ export class AuthService {
   public async register(registerDTO: RegisterDTO): Promise<RegisterResponse> {
     await this.validateUserUniqueness(registerDTO.email);
     await this.persistUser(registerDTO);
-    return this.createSuccessResponse();
+    return this.createRegisterResponse();
   }
 
   private async validateUserUniqueness(email: string): Promise<void> {
@@ -49,7 +49,7 @@ export class AuthService {
     this.logger.log(`✅ Persist User : User with email ${registerDTO.email} registered`);
   }
 
-  private createSuccessResponse(): RegisterResponse {
+  private createRegisterResponse(): RegisterResponse {
     return {
       message: 'User registered successfully',
       statusCode: 201,
@@ -58,7 +58,7 @@ export class AuthService {
 
   public async login(loginDTO: LoginDTO): Promise<LoginResponse> {
     const user = await this.validateUser(loginDTO);
-    return this.buildAuthResponse(user);
+    return this.createLoginResponse(user);
   }
 
   private async validateUser(loginDTO: LoginDTO) {
@@ -87,7 +87,7 @@ export class AuthService {
     }
   }
 
-  private buildAuthResponse(payload: JwtPayload): LoginResponse {
+  private createLoginResponse(payload: JwtPayload): LoginResponse {
     const { id, email } = payload;
     const accessToken = this.jwtProvider.generateAccessToken({ id, email });
     return { message: 'Login successful', statusCode: 200, accessToken };

@@ -2,391 +2,97 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-# NestJS Authentication with JWT
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-A production-ready NestJS application implementing JWT authentication with TypeORM, PostgreSQL, and comprehensive code quality tools.
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## 📋 Table of Contents
+## Description
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
-- [Development](#development)
-- [Docker](#docker)
-- [Database Migrations](#database-migrations)
-- [Testing](#testing)
-- [Code Quality & Git Hooks](#code-quality--git-hooks)
-- [API Endpoints](#api-endpoints)
-- [Project Structure](#project-structure)
-- [Environment Variables](#environment-variables)
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## ✨ Features
-
-- 🔐 **JWT Authentication** - Secure authentication using Passport.js and JWT
-- 🔒 **Password Encryption** - Bcrypt password hashing
-- 🗃️ **Database ORM** - TypeORM with PostgreSQL
-- 🐳 **Docker Support** - Complete containerization with Docker Compose
-- 🎯 **Clean Code** - Follows Uncle Bob's Clean Code principles
-- 🔍 **Code Quality** - ESLint, Prettier, and Husky pre-commit hooks
-- 📝 **Commit Conventions** - Commitlint for conventional commits
-- 🔀 **Branch Validation** - Automatic branch name validation
-- ✅ **Testing** - Jest for unit and E2E tests
-- 📚 **API Documentation** - HTTP files for testing endpoints
-
-## 🛠️ Tech Stack
-
-- **Framework**: [NestJS](https://nestjs.com/) v11
-- **Language**: TypeScript
-- **Database**: PostgreSQL 16
-- **ORM**: TypeORM
-- **Authentication**: Passport.js + JWT
-- **Validation**: Class Validator & Class Transformer
-- **Testing**: Jest
-- **Package Manager**: pnpm
-- **Containerization**: Docker & Docker Compose
-
-## 📦 Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Node.js** >= 18.x
-- **pnpm** >= 8.x
-- **Docker** & **Docker Compose** (for containerized setup)
-- **Git**
+## Project setup
 
 ```bash
-# Install pnpm globally
-npm install -g pnpm
-
-# Verify installations
-node --version
-pnpm --version
-docker --version
+$ pnpm install
 ```
 
-## 🚀 Getting Started
-
-### 1. Clone the Repository
+## Compile and run the project
 
 ```bash
-git clone https://github.com/Mx444/nestjs-auth-jwt.git
-cd nestjs-auth-jwt
+# development
+$ pnpm run start
+
+# watch mode
+$ pnpm run start:dev
+
+# production mode
+$ pnpm run start:prod
 ```
 
-### 2. Install Dependencies
+## Run tests
 
 ```bash
-pnpm install
+# unit tests
+$ pnpm run test
+
+# e2e tests
+$ pnpm run test:e2e
+
+# test coverage
+$ pnpm run test:cov
 ```
 
-### 3. Environment Setup
+## Deployment
 
-Copy the example environment file and configure it:
+When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+
+If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
 
 ```bash
-cp example.env .env
+$ pnpm install -g @nestjs/mau
+$ mau deploy
 ```
 
-Edit `.env` with your configuration:
+With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
-```env
-# General
-NODE_ENV=development
+## Resources
 
-# NestJS
-NESTJS_PORT=1337
+Check out a few resources that may come in handy when working with NestJS:
 
-# Database Development
-DB_HOST_DEV=localhost
-DB_PORT_DEV=5432
-DB_USER_DEV=dev_user
-DB_PASSWORD_DEV=dev_password
-DB_NAME_DEV=nestjs_auth_dev
+- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
+- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
+- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
+- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
+- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
+- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
+- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
+- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
 
-# JWT
-JWT_SECRET=your-super-secret-jwt-key-change-in-production
-JWT_EXPIRES_IN=1h
-```
+## Support
 
-### 4. Start Development Server
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-**Option A: Local Development (requires PostgreSQL installed)**
+## Stay in touch
 
-```bash
-pnpm start:dev
-```
+- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-**Option B: Docker Development (recommended)**
+## License
 
-```bash
-# Start all services (PostgreSQL + NestJS)
-pnpm docker:up
-
-# View logs
-pnpm docker:logs
-
-# Stop all services
-pnpm docker:down
-```
-
-The API will be available at `http://localhost:1337`
-
-## 💻 Development
-
-### Available Scripts
-
-```bash
-# Development
-pnpm start:dev          # Start with hot-reload
-pnpm start:debug        # Start in debug mode
-pnpm start:prod         # Start production build
-
-# Building
-pnpm build              # Build the application
-
-# Code Quality
-pnpm format             # Format code with Prettier
-pnpm lint               # Lint and fix code with ESLint
-pnpm lint:fix           # Auto-fix linting issues
-
-# Testing
-pnpm test               # Run unit tests
-pnpm test:watch         # Run tests in watch mode
-pnpm test:cov           # Generate coverage report
-pnpm test:e2e           # Run end-to-end tests
-```
-
-## 🐳 Docker
-
-### Docker Commands
-
-```bash
-# Start containers in detached mode
-pnpm docker:up
-
-# Stop and remove containers
-pnpm docker:down
-
-# View container logs
-pnpm docker:logs
-
-# Run migrations in Docker
-pnpm docker:migrate
-```
-
-### Docker Services
-
-- **postgres**: PostgreSQL 16 database (port 5432)
-- **app**: NestJS application (port 1337)
-- **migrations**: Migration runner service
-
-## 🗄️ Database Migrations
-
-### Migration Commands
-
-```bash
-# Generate a new migration
-pnpm migration:generate src/database/migrations/MigrationName
-
-# Create an empty migration
-pnpm migration:create src/database/migrations/MigrationName
-
-# Run pending migrations
-pnpm migration:run
-
-# Revert last migration
-pnpm migration:revert
-```
-
-### Migration Workflow
-
-1. Make changes to your entities
-2. Generate migration: `pnpm migration:generate src/database/migrations/AddUserTable`
-3. Review the generated migration file
-4. Apply migration: `pnpm migration:run`
-
-## ✅ Testing
-
-### Running Tests
-
-```bash
-# Unit tests
-pnpm test
-
-# E2E tests
-pnpm test:e2e
-
-# Test coverage
-pnpm test:cov
-
-# Watch mode
-pnpm test:watch
-```
-
-### HTTP Files for Manual Testing
-
-Located in `src/auth/http/`:
-
-- `auth-register.http` - User registration
-- `auth-login.http` - User login
-- `auth-profile.http` - Get user profile (protected)
-
-Use the [httpYac](https://marketplace.visualstudio.com/items?itemName=anweber.vscode-httpyac) extension in VS Code to run these requests.
-
-## 🎯 Code Quality & Git Hooks
-
-This project uses **Husky** to enforce code quality standards before commits.
-
-### Pre-commit Hook
-
-Automatically runs before each commit:
-
-```bash
-✓ Prettier formatting
-✓ ESLint linting
-✓ Branch name validation
-```
-
-### Commit Message Validation
-
-Commits must follow [Conventional Commits](https://www.conventionalcommits.org/):
-
-```bash
-feat: add user registration endpoint
-fix: resolve JWT token expiration issue
-docs: update API documentation
-chore: update dependencies
-```
-
-**Valid commit types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
-
-### Branch Naming Convention
-
-Valid branch patterns:
-
-- `main` - Main branch
-- `develop` - Development branch
-- `feat/feature-name` - New features
-- `feat/feature-name/sub-feature` - Feature with sub-feature
-- `release/v1.0.0` - Release branches
-- `bugfix/bug-description` - Bug fixes
-- `chore/task-description` - Maintenance tasks
-- `docs/documentation-name` - Documentation updates
-
-### Bypassing Hooks (Not Recommended)
-
-```bash
-# Skip pre-commit hooks
-git commit --no-verify -m "message"
-
-# Skip all hooks
-git push --no-verify
-```
-
-## 📡 API Endpoints
-
-### Authentication
-
-| Method | Endpoint         | Description       | Auth Required |
-| ------ | ---------------- | ----------------- | ------------- |
-| POST   | `/auth/register` | Register new user | No            |
-| POST   | `/auth/login`    | Login user        | No            |
-| GET    | `/auth/profile`  | Get user profile  | Yes (JWT)     |
-
-### Example Requests
-
-**Register**
-
-```bash
-POST http://localhost:1337/auth/register
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "SecurePassword123!"
-}
-```
-
-**Login**
-
-```bash
-POST http://localhost:1337/auth/login
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "SecurePassword123!"
-}
-```
-
-**Get Profile**
-
-```bash
-GET http://localhost:1337/auth/profile
-Authorization: Bearer <your-jwt-token>
-```
-
-## 📁 Project Structure
-
-```
-nestjs-auth-jwt/
-├── src/
-│   ├── auth/                    # Authentication module
-│   │   ├── controllers/         # Auth controllers
-│   │   ├── dtos/                # Data Transfer Objects
-│   │   ├── entities/            # User entity
-│   │   ├── guards/              # JWT guard
-│   │   ├── http/                # HTTP test files
-│   │   ├── interfaces/          # TypeScript interfaces
-│   │   ├── providers/           # Services (AuthService, BcryptProvider)
-│   │   ├── repositories/        # User repository
-│   │   ├── strategies/          # Passport JWT strategy
-│   │   └── auth.module.ts       # Auth module
-│   ├── config/                  # Configuration files
-│   │   └── typeorm.config.ts    # TypeORM configuration
-│   ├── database/                # Database module
-│   │   ├── migrations/          # Database migrations
-│   │   ├── repository/          # Abstract repository
-│   │   └── database.module.ts   # Database module
-│   ├── schemas/                 # Validation schemas (Zod)
-│   ├── app.module.ts            # Root module
-│   └── main.ts                  # Application entry point
-├── test/                        # E2E tests
-├── .husky/                      # Git hooks
-├── docker-compose.yml           # Docker services
-├── Dockerfile                   # App container
-└── package.json                 # Dependencies and scripts
-```
-
-## 🔐 Environment Variables
-
-| Variable          | Description          | Default           |
-| ----------------- | -------------------- | ----------------- |
-| `NODE_ENV`        | Environment mode     | `development`     |
-| `NESTJS_PORT`     | Application port     | `1337`            |
-| `DB_HOST_DEV`     | Database host        | `localhost`       |
-| `DB_PORT_DEV`     | Database port        | `5432`            |
-| `DB_USER_DEV`     | Database username    | `dev_user`        |
-| `DB_PASSWORD_DEV` | Database password    | `dev_password`    |
-| `DB_NAME_DEV`     | Database name        | `nestjs_auth_dev` |
-| `JWT_SECRET`      | JWT secret key       | -                 |
-| `JWT_EXPIRES_IN`  | JWT token expiration | `1h`              |
-
-## 📝 License
-
-This project is [MIT licensed](LICENSE).
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feat/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feat/amazing-feature`)
-5. Open a Pull Request
-
-## 📧 Support
-
-For issues and questions, please open an issue in the [GitHub repository](https://github.com/Mx444/nestjs-auth-jwt/issues).
+Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).

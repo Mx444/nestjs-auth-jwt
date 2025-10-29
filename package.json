@@ -28,7 +28,8 @@
     "docker:logs": "docker-compose logs -f",
     "docker:migrate": "docker-compose run --rm migrations",
     "validate-branch-name": "validate-branch-name",
-    "prepare": "husky"
+    "prepare": "husky",
+    "compodoc": "pnpx compodoc -p tsconfig.json -s"
   },
   "lint-staged": {
     "./src/**/*.{ts,js,jsx,tsx}": [
@@ -64,6 +65,7 @@
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
+    "@compodoc/compodoc": "^1.1.31",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
     "@nestjs/cli": "^11.0.0",
