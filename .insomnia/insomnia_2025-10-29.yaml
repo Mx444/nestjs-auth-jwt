@@ -1,0 +1,116 @@
+type: collection.insomnia.rest/5.0
+name: "[MX] NestJS Auth"
+meta:
+  id: wrk_e98f301310f64576ac223b7893aef5ed
+  created: 1761745684742
+  modified: 1761745684741
+  description: ""
+collection:
+  - name: Auth
+    meta:
+      id: fld_37e3db556d3d4534bba28ec54431e7d6
+      created: 1761745697678
+      modified: 1761745904041
+      sortKey: -1761745697678
+      description: ""
+    children:
+      - url: http://localhost:1337/auth/register
+        name: /auth/register/
+        meta:
+          id: req_d7a63c9bf27149da8d89820e2642472d
+          created: 1761745690875
+          modified: 1761747688428
+          isPrivate: false
+          description: ""
+          sortKey: -1761745700351
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email":"email@test.it",
+            	"password":"Test12345@!x"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:1337/auth/login
+        name: /auth/login/
+        meta:
+          id: req_afb943fdacb64ff79fdb6189c111cdd3
+          created: 1761745905374
+          modified: 1761747847622
+          isPrivate: false
+          description: ""
+          sortKey: -1761745700451
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email":"email@test.it",
+            	"password":"Test12345@!x"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:1337/auth/profile
+        name: /auth/profile/
+        meta:
+          id: req_20a197bc8794455b811d1a70ea629dd8
+          created: 1761746000433
+          modified: 1761747856335
+          isPrivate: false
+          description: ""
+          sortKey: -1761745700551
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+            id: pair_363a400ae147461aaa3c71d381dc2df8
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJlbWFpbEB0ZXN0Lml0IiwiaWF0IjoxNzYxNzQ3ODQ4LCJleHAiOjE3NjE3NTE0NDh9.BSGvvu9XM6pr6hvr15lQezARvuR1W-0D1DqBjPIrINE
+          disabled: false
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_8d2657440e9d63122cce42050b008fdf4775d08e
+    created: 1761745684745
+    modified: 1761745684745
+environments:
+  name: Base Environment
+  meta:
+    id: env_8d2657440e9d63122cce42050b008fdf4775d08e
+    created: 1761745684743
+    modified: 1761745684743
+    isPrivate: false
