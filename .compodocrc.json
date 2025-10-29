@@ -1,0 +1,13 @@
+{
+  "port": 8080,
+  "output": "documentation",
+  "theme": "stripe",
+  "tsconfig": "tsconfig.json",
+  "hideGenerator": true,
+  "disableCoverage": false,
+  "disablePrivate": true,
+  "disableProtected": false,
+  "disableInternal": true,
+  "disableLifeCycleHooks": false,
+  "includeVersion": true
+}
