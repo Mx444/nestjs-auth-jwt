@@ -28,10 +28,10 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
   public async save(data: DeepPartial<T>): Promise<T> {
     try {
       const saved = await this.entity.save(data);
-      this.logger.log(`✅ Item saved successfully`);
+      this.logger.log(`✅ Save : Item saved successfully`);
       return saved;
     } catch (error) {
-      this.handleError('saving', error);
+      this.handleError('Save', error);
       throw error;
     }
   }
@@ -39,10 +39,10 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
   public async saveMany(data: DeepPartial<T>[]): Promise<T[]> {
     try {
       const saved = await this.entity.save(data);
-      this.logger.log(`✅ ${saved.length} items saved successfully`);
+      this.logger.log(`✅ Save Many : ${saved.length} items saved successfully`);
       return saved;
     } catch (error) {
-      this.handleError('batch saving', error);
+      this.handleError('Batch Save', error);
       throw error;
     }
   }
@@ -61,12 +61,12 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
       const result = await this.entity.findOneBy(options);
 
       if (!result) {
-        this.logger.warn(`⚠️ Item with id ${id} not found`);
+        this.logger.warn(`⚠️ Find One By ID : Item with id ${id} not found`);
       }
 
       return result;
     } catch (error) {
-      this.handleError(`finding item with id ${id}`, error);
+      this.handleError(`Find One By ID : ${id}`, error);
       throw error;
     }
   }
@@ -75,7 +75,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
     try {
       return await this.entity.findOne(filterCondition);
     } catch (error) {
-      this.handleError('finding by condition', error);
+      this.handleError('Find By Condition', error);
       throw error;
     }
   }
@@ -84,7 +84,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
     try {
       return await this.entity.find(relations);
     } catch (error) {
-      this.handleError('finding with relations', error);
+      this.handleError('Find With Relations', error);
       throw error;
     }
   }
@@ -93,7 +93,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
     try {
       return await this.entity.find(options);
     } catch (error) {
-      this.handleError('finding all items', error);
+      this.handleError('Find All', error);
       throw error;
     }
   }
@@ -101,10 +101,10 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
   public async remove(data: T): Promise<T> {
     try {
       const removed = await this.entity.remove(data);
-      this.logger.log(`✅ Item with id ${data.id} deleted successfully`);
+      this.logger.log(`✅ Remove : Item with id ${data.id} deleted successfully`);
       return removed;
     } catch (error) {
-      this.handleError(`deleting item with id ${data.id}`, error);
+      this.handleError(`Delete : ${data.id}`, error);
       throw error;
     }
   }
@@ -112,9 +112,9 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
   public async delete(id: number): Promise<void> {
     try {
       await this.entity.delete(id);
-      this.logger.log(`✅ Item with id ${id} deleted successfully`);
+      this.logger.log(`✅ Delete : Item with id ${id} deleted successfully`);
     } catch (error) {
-      this.handleError(`deleting item with id ${id}`, error);
+      this.handleError(`Delete : ${id}`, error);
       throw error;
     }
   }
@@ -123,7 +123,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
     try {
       return await this.entity.preload(entityLike);
     } catch (error) {
-      this.handleError('preloading entity', error);
+      this.handleError('Preload', error);
       throw error;
     }
   }
@@ -132,7 +132,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
     try {
       return await this.entity.findOne(options);
     } catch (error) {
-      this.handleError('finding one item', error);
+      this.handleError('Find One', error);
       throw error;
     }
   }
@@ -145,7 +145,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
         if (existing) {
           const merged = this.entity.merge(existing, data);
           const updated = await this.entity.save(merged);
-          this.logger.log(`✅ Item updated successfully`);
+          this.logger.log(`✅ Upsert : Item updated successfully`);
           return updated;
         }
       }
@@ -156,16 +156,16 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
         if (existing) {
           const merged = this.entity.merge(existing, data);
           const updated = await this.entity.save(merged);
-          this.logger.log(`✅ Item with id ${dataWithId.id} updated`);
+          this.logger.log(`✅ Upsert : Item with id ${dataWithId.id} updated`);
           return updated;
         }
       }
 
       const created = await this.entity.save(data);
-      this.logger.log(`✅ Item created successfully`);
+      this.logger.log(`✅ Upsert : Item created successfully`);
       return created;
     } catch (error) {
-      this.handleError('upserting item', error);
+      this.handleError('Upsert', error);
       throw error;
     }
   }
@@ -174,7 +174,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
     try {
       return await this.entity.count(options);
     } catch (error) {
-      this.handleError('counting items', error);
+      this.handleError('Count', error);
       throw error;
     }
   }
@@ -184,13 +184,13 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
       const count = await this.entity.countBy(where);
       return count > 0;
     } catch (error) {
-      this.handleError('checking existence', error);
+      this.handleError('Exists', error);
       throw error;
     }
   }
 
   protected handleError(operation: string, error: unknown): void {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    this.logger.error(`💥 Error ${operation}: ${errorMessage}`);
+    this.logger.error(`💥 Handle Error : ${operation}: ${errorMessage}`);
   }
 }

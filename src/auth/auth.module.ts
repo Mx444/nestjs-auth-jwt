@@ -1,15 +1,16 @@
 /** @format */
 
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from 'src/database/database.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { BcryptProvider } from 'src/auth/providers/bcrypt.provider';
-import { AuthService } from './providers/auth.service';
+import { DatabaseModule } from 'src/database/database.module';
 import { AuthController } from './controllers/auth.controller';
-import { JwtStrategy } from './strategies/jwt.strategy';
+import { AuthService } from './providers/auth.service';
+import { JwtProvider } from './providers/jwt.provider';
 import { UserRepository } from './repositories/user.repository';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { UserRepository } from './repositories/user.repository';
     // Providers
     AuthService,
     BcryptProvider,
+    JwtProvider,
 
     // Strategies
     JwtStrategy,

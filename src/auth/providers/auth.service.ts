@@ -1,113 +1,95 @@
 /** @format */
 
-import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { LoginDTO, RegisterDTO } from '../dtos/base-auth.dto';
 
-import { BcryptProvider } from './bcrypt.provider';
+import { IsNull } from 'typeorm/find-options/operator/IsNull';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { UserRepository } from '../repositories/user.repository';
-import { JwtService } from '@nestjs/jwt/dist/jwt.service';
-import { User } from '../entities/user.entity';
+import { LoginResponse } from '../responses/login.response';
+import { RegisterResponse } from '../responses/register.response';
+import { BcryptProvider } from './bcrypt.provider';
+import { JwtProvider } from './jwt.provider';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger('🔐 AuthService');
+
   constructor(
     private readonly bcryptProvider: BcryptProvider,
     private readonly userRepository: UserRepository,
-    private readonly jwtService: JwtService,
+    private readonly jwtProvider: JwtProvider,
   ) {}
 
-  //#region REGISTER
-  public async register(
-    registerDTO: RegisterDTO,
-  ): Promise<{ message: string }> {
-    await this.ensureUserDoesNotExist(registerDTO.email);
-    const hashedPassword = await this.hashPassword(registerDTO.password);
-    await this.createAndSaveUser(registerDTO, hashedPassword);
-    return this.buildSuccessResponse();
+  public async register(registerDTO: RegisterDTO): Promise<RegisterResponse> {
+    await this.validateUserUniqueness(registerDTO.email);
+    await this.persistUser(registerDTO);
+    return this.createSuccessResponse();
   }
 
-  //#region helpers REGISTER
-  private async ensureUserDoesNotExist(email: string): Promise<void> {
-    const userExists = await this.checkIfUserExists(email);
-    if (userExists) throw new ConflictException('Check your credentials');
+  private async validateUserUniqueness(email: string): Promise<void> {
+    const existingUser = await this.userRepository.findOne({ where: { email } });
+    if (existingUser) {
+      this.logger.warn(`🚨 Validate User Uniqueness : Registration attempt blocked`);
+      throw new BadRequestException('Unable to process your registration request');
+    }
   }
 
-  private async checkIfUserExists(email: string): Promise<boolean> {
-    const user = await this.userRepository.findOne({ where: { email } });
-    return !!user;
-  }
+  private async persistUser(registerDTO: RegisterDTO): Promise<void> {
+    const hashedPassword = await this.bcryptProvider.hashPassword({
+      password: registerDTO.password,
+    });
 
-  private async hashPassword(password: string): Promise<string> {
-    return this.bcryptProvider.hashPassword({ password });
-  }
-
-  private async createAndSaveUser(
-    registerDTO: RegisterDTO,
-    hashedPassword: string,
-  ): Promise<void> {
-    const newUser = this.userRepository.create({
+    const user = this.userRepository.create({
       ...registerDTO,
       password: hashedPassword,
     });
-    await this.userRepository.save(newUser);
+
+    await this.userRepository.save(user);
+    this.logger.log(`✅ Persist User : User with email ${registerDTO.email} registered`);
   }
 
-  private buildSuccessResponse(): { message: string } {
-    return { message: 'User registered successfully' };
+  private createSuccessResponse(): RegisterResponse {
+    return {
+      message: 'User registered successfully',
+      statusCode: 201,
+    };
   }
-  //#endregion helpers REGISTER
-  //#endregion REGISTER
 
-  //#region LOGIN
-  public async login(loginDTO: LoginDTO): Promise<{ token: string }> {
+  public async login(loginDTO: LoginDTO): Promise<LoginResponse> {
     const user = await this.validateUser(loginDTO);
     return this.buildAuthResponse(user);
   }
 
-  //#region helpers LOGIN
   private async validateUser(loginDTO: LoginDTO) {
-    const user = await this.findUserByEmail(loginDTO.email);
-    this.ensureUserExistsForLogin(user);
-    if (!user) throw new Error('Checking user existence failed');
-    await this.verifyPassword(loginDTO.password, user.password);
+    const user = await this.userRepository.findOne({
+      where: { email: loginDTO.email, deletedAt: IsNull() },
+    });
 
+    if (!user) {
+      this.logger.warn(`🚨 Validate User : Login attempt failed - user not found`);
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    await this.verifyPassword(loginDTO.password, user.password);
     return user;
   }
 
-  private async findUserByEmail(email: string) {
-    return this.userRepository.findOne({ where: { email } });
-  }
-
-  private ensureUserExistsForLogin(user: any): void {
-    if (!user) throw new UnauthorizedException('Invalid credentials');
-  }
-
-  private async verifyPassword(
-    plainPassword: string,
-    hashedPassword: string,
-  ): Promise<void> {
+  private async verifyPassword(plainPassword: string, hashedPassword: string): Promise<void> {
     const isPasswordValid = await this.bcryptProvider.comparePasswords({
       password: plainPassword,
       hashedPassword,
     });
 
-    if (!isPasswordValid)
+    if (!isPasswordValid) {
+      this.logger.warn(`🚨 Verify Password : Login attempt failed - invalid password`);
       throw new UnauthorizedException('Invalid credentials');
+    }
   }
 
-  private buildAuthResponse(user: User): { token: string } {
-    const accessToken = this.generateAccessToken(user);
-    return { token: accessToken };
+  private buildAuthResponse(payload: JwtPayload): LoginResponse {
+    const { id, email } = payload;
+    const accessToken = this.jwtProvider.generateAccessToken({ id, email });
+    return { message: 'Login successful', statusCode: 200, accessToken };
   }
-
-  private generateAccessToken(user: User): string {
-    const payload = { sub: user.id, email: user.email };
-    return this.jwtService.sign(payload);
-  }
-  //#endregion helpers LOGIN
-  //#endregion LOGIN
 }

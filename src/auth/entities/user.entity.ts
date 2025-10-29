@@ -1,6 +1,6 @@
 /** @format */
 
-import { Entity, Column, DeleteDateColumn } from 'typeorm';
+import { Column, DeleteDateColumn, Entity } from 'typeorm';
 import { BaseEntity } from '../../database/entities/base.entity';
 
 @Entity({ name: 'users' })

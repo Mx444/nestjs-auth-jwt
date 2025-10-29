@@ -2,9 +2,9 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, IsNull } from 'typeorm';
 import { User } from 'src/auth/entities/user.entity';
 import { BaseAbstractRepostitory } from 'src/database/repository/abstract.repository';
+import { IsNull, Repository } from 'typeorm';
 import { UserRepositoryInterface } from '../interfaces/user.interface';
 
 @Injectable()

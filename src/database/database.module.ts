@@ -20,9 +20,7 @@ import { join } from 'path';
             ? configService.get('DB_HOST_DEV')
             : configService.get('DB_HOST_PROD'),
           port: Number(
-            isDevelopment
-              ? configService.get('DB_PORT_DEV')
-              : configService.get('DB_PORT_PROD'),
+            isDevelopment ? configService.get('DB_PORT_DEV') : configService.get('DB_PORT_PROD'),
           ),
           username: isDevelopment
             ? configService.get('DB_USERNAME_DEV')

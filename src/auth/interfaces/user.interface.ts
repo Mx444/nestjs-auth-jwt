@@ -4,5 +4,4 @@ import { BaseInterfaceRepository } from '../../database/interfaces/base.interfac
 import { User } from '../entities/user.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface UserRepositoryInterface
-  extends BaseInterfaceRepository<User> {}
+export interface UserRepositoryInterface extends BaseInterfaceRepository<User> {}

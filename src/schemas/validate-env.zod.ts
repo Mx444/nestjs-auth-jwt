@@ -18,7 +18,10 @@ export const envSchema = z.object({
   JWT_SECRET: z.string().min(32).max(1024),
   JWT_EXPIRES_IN: z.string().default('1h'),
   JWT_REFRESH_SECRET: z.string().min(32).max(1024),
-  JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
+  JWT_REFRESH_EXPIRES_IN: z
+    .string()
+    .default('604800')
+    .transform((t) => Number(t)),
   JWT_ISSUER: z.string().default(`http://localhost:${process.env.NESTJS_PORT ?? 3000}`),
   JWT_AUDIENCE: z.string().default('nestjs-auth-jwt'),
 });

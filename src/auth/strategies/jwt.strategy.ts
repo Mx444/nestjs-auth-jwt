@@ -4,10 +4,10 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { IsNull } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { UserRepository } from '../repositories/user.repository';
-import { IsNull } from 'typeorm';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       audience: configService.get<string>('JWT_AUDIENCE')!,
     });
 
-    this.logger.log('🔑 JWT-STRATEGY : Initialized');
+    this.logger.log('Initialized');
   }
 
   public async validate(payload: JwtPayload) {
@@ -37,21 +37,21 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   private validatePayload(payload: JwtPayload) {
     if (!payload || !payload.id || !payload.email) {
-      this.logger.warn(`🚨 JWT-STRATEGY : Invalid payload`);
+      this.logger.warn(`Invalid payload`);
       throw new UnauthorizedException('Invalid token payload');
     }
-    this.logger.log(`✅ JWT-STRATEGY : Payload validated for user ID: ${payload.id}`);
+    this.logger.log(`Payload validated for user ID: ${payload.id}`);
   }
 
   private async findUserById(userId: number): Promise<User | null> {
     const user = await this.userRepository.findOne({ where: { id: userId, deletedAt: IsNull() } });
-    this.logger.log(`🚨 JWT-STRATEGY : Validating JWT for user ID: ${user?.id}`);
+    this.logger.log(`Validating JWT for user ID: ${user?.id}`);
     return user;
   }
 
   private ensureUserExists(user: User | null): asserts user is User {
     if (!user) {
-      this.logger.warn(`🚨 JWT-STRATEGY : User not found`);
+      this.logger.warn(`User not found`);
       throw new UnauthorizedException('Invalid token');
     }
   }
@@ -59,7 +59,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   private sanitizeUser(user: User): Omit<User, 'password'> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: __, ...result } = user;
-    this.logger.log(`✅ JWT-STRATEGY : User validated successfully`);
+    this.logger.log(`User validated successfully`);
     return result;
   }
 }

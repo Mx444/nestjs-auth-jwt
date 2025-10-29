@@ -1,11 +1,6 @@
 /** @format */
 
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  IsStrongPassword,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsStrongPassword } from 'class-validator';
 
 class BaseAuthDTO {
   @IsString()
