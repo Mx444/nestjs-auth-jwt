@@ -1,17 +1,18 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
     container_name: postgres
     restart: unless-stopped
+    labels:
+      com.docker.compose.project: 'nestjs-auth-jwt'
+      app.description: 'PostgreSQL Database'
     environment:
       POSTGRES_USER: ${DB_USERNAME_DEV}
       POSTGRES_PASSWORD: ${DB_PASSWORD_DEV}
       POSTGRES_DB: ${DB_NAME_DEV}
     ports:
-      - '${DB_PORT_DEV}:5432'
+      - '5433:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -29,6 +30,9 @@ services:
       dockerfile: src/Dockerfile
     container_name: nestjs-auth-app
     restart: unless-stopped
+    labels:
+      com.docker.compose.project: 'nestjs-auth-jwt'
+      app.description: 'NestJS Authentication API'
     environment:
       NODE_ENV: development
       DB_HOST_DEV: postgres
@@ -36,9 +40,9 @@ services:
       DB_USERNAME_DEV: ${DB_USERNAME_DEV}
       DB_PASSWORD_DEV: ${DB_PASSWORD_DEV}
       DB_NAME_DEV: ${DB_NAME_DEV}
-      NESTJS_PORT: ${NESTJS_PORT}
+      NESTJS_PORT: 3000
     ports:
-      - '${NESTJS_PORT}:${NESTJS_PORT}'
+      - '3000:3000'
     depends_on:
       postgres:
         condition: service_healthy
@@ -52,8 +56,11 @@ services:
   migrations:
     build:
       context: .
-      dockerfile: src/database/Dockerfile.migrations 
+      dockerfile: src/database/Dockerfile.migrations
     container_name: nestjs-auth-migrations
+    labels:
+      com.docker.compose.project: 'nestjs-auth-jwt'
+      app.description: 'Database Migrations'
     environment:
       DB_HOST_DEV: postgres
       DB_PORT_DEV: 5432
